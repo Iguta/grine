@@ -1,34 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, type ReactNode } from 'react'
+import { AppLayout } from './components/AppLayout'
+import { AppDataProvider } from './hooks/useAppData'
+import { TasksPage } from './pages/TasksPage'
+import { GoalsPage } from './pages/GoalsPage'
+import { CalendarPage } from './pages/CalendarPage'
+import { ProgressPage } from './pages/ProgressPage'
 import './App.css'
 
+const navItems = [
+  { id: 'tasks', label: 'Tasks', description: 'Plan & prioritize' },
+  { id: 'goals', label: 'Goals', description: 'Set intentions' },
+  { id: 'calendar', label: 'Calendar', description: 'See the rhythm' },
+  { id: 'progress', label: 'Progress', description: 'Track momentum' },
+]
+
+const pageMap: Record<string, ReactNode> = {
+  tasks: <TasksPage />,
+  goals: <GoalsPage />,
+  calendar: <CalendarPage />,
+  progress: <ProgressPage />,
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [activePage, setActivePage] = useState('tasks')
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <AppDataProvider>
+      <AppLayout navItems={navItems} activeId={activePage} onNavigate={setActivePage}>
+        {pageMap[activePage]}
+      </AppLayout>
+    </AppDataProvider>
   )
 }
 
